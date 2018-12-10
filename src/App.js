@@ -224,11 +224,11 @@ class App extends Component {
 
       <form>
         <div className="form-group">
-          <label for="exampleInputEmail1">Username</label>
+          {/* <label for="exampleInputEmail1">Username</label> */}
           <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="NetID"></input>
         </div>
         <div className="form-group">
-          <label for="exampleInputPassword1">Password</label>
+          {/* <label for="exampleInputPassword1">Password</label> */}
           <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password"></input>
           <small id="emailHelp" className="form-text text-muted">Never share your password with anyone else.</small>
         </div>
