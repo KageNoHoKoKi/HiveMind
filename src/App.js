@@ -13,18 +13,21 @@ class App extends Component {
       super(props);
       this.state = {
         questions:[
-          {
-            text: "Why did the Industrial Revolution originate in Britian?",
-            votes: 0
-          },
-          {
-            text: "How come China failed to industrialize in the 19th century?",
-            votes: 0
-          },
-          {
-            text: "Examples of Qing dynasty inventions?",
-            votes: 0
-          },
+          // {
+          //   text: "Why did the Industrial Revolution originate in Britian?",
+          //   votes: 0,
+          //   key: 0
+          // },
+          // {
+          //   text: "How come China failed to industrialize in the 19th century?",
+          //   votes: 0,
+          //   key: 1
+          // },
+          // {
+          //   text: "Examples of Qing dynasty inventions?",
+          //   votes: 0,
+          //   key: 2
+          // },
         ],
         data: [],
         value: "",
@@ -34,7 +37,6 @@ class App extends Component {
       };
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
-      this.submittingButton = this.submittingButton.bind(this);
       this.usedVote = this.usedVote.bind(this);
   }
 
@@ -54,37 +56,72 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let reference = database.ref("data");
-    reference.on("child_added", (newData) =>{
-    
-      console.log(this.state.data);
+    let reference = database.ref("Question Directory");
+    reference.on("child_added", (newData) =>{  
+      let key = newData.key;
+      let value = newData.val();
+      let dataPoint = {
+        key: key,
+        text: value.text,
+        votes: value.votes
+      }
       this.setState({
-        data: this.state.data.concat( [ newData.val()] )
+        questions: this.state.questions.concat( [ dataPoint ] )
+      })
+    });
+    reference.on("child_changed", (changedData) =>{  
+      console.log("CHILD CHANGED@!")
+      console.log(changedData);
+      let key = changedData.key;
+      let value = changedData.val();
+      console.log(key);
+      console.log(value);
+      // let stateIndexOfChangedChild = this.state.questions.findIndex(element=>{
+      //   return element.key == key;
+      // })
+      // console.log(stateIndexOfChangedChild);
+
+      let newQuestions = this.state.questions.map(question => {
+        if(question.key == key){
+          question.votes = value.votes;
+          return question;
+        }else{
+          return question;
+        }
+      });
+
+
+      // let dataPoint = {
+      //   key: key,
+      //   text: value.text,
+      //   votes: value.votes
+      // }
+      this.setState({
+        questions: newQuestions
       })
     })
   }
+ 
 
   handleChange(event) {
     this.setState({value: event.target.value});
   }
 
   addQuestion = (newQuestion) => {
-    let updateQuestions = this.state.questions;
+    // let updateQuestions = this.state.questions;
     let x = {
       text: newQuestion,
-      votes: 0
+      votes: 1
     }
-    updateQuestions.push(x);
-    this.setState({
-      questions: updateQuestions
-    })
-    this.pushToDB("Question Directory",newQuestion);
+    // updateQuestions.push(x);
+
+    this.pushToDB("Question Directory", x);
   }
 
-  submittingButton = () => this.addQuestion(this.state.value)
+
   handleSubmit(event) {
     event.preventDefault()
-    this.submittingButton()
+    this.addQuestion(this.state.value)
     let totalQuestions = this.state.numQuestions;
     if (totalQuestions > 0) {
       totalQuestions -= 1;
@@ -102,12 +139,24 @@ class App extends Component {
     })
   }
 
-  bumpQuestion = (i) => {
-    let updateQuestions = this.state.questions;
-    updateQuestions[i].votes = this.state.questions[i].votes + 1;
-    this.setState({
-      questions: updateQuestions
+  bumpQuestion = (dbKey) => {
+    // here we awant a transaction\
+    // to add one to the vites of this question to whatever 
+    // its votes may be right now( we do this anticipating
+    // that two people might click vote at the same very moment)
+    
+    let reference = database.ref("Question Directory/"+dbKey+"/votes");
+    reference.transaction(function(thisQuationosVotes) {
+      thisQuationosVotes += 1;
+      return thisQuationosVotes;
     });
+
+
+    // let updateQuestions = this.state.questions;
+    // updateQuestions[i].votes = this.state.questions[i].votes + 1;
+    // this.setState({
+    //   questions: updateQuestions
+    // });
   }
 
   compareFunction = (questionObjectA,questionObjectB) => {
@@ -177,7 +226,7 @@ class App extends Component {
           <button disabled={!this.state.value} type="submit" name="action">Submit</button>
         </form>
 
-       <div><Questionsqueue data={this.state.questions.sort(this.compareFunction).filter(this.filterFunction)} upvote={(i) => {this.bumpQuestion(i);this.usedVote();}} votes={this.state.numVotes}/></div>
+       <div><Questionsqueue data={this.state.questions.sort(this.compareFunction).filter(this.filterFunction)} upvote={(i) => {this.bumpQuestion(i);this.usedVote();}} votes={this.state.numVotes} questions={this.state.questions}/></div>
      </div>
    } else if (this.state.currentPage === "main"){
      partial =
