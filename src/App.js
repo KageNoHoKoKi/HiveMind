@@ -3,7 +3,10 @@ import logo from './logo.png';
 import './App.css';
 import Login from "./Components/login";
 import Questionsqueue from "./Components/queue";
-
+import firebase from 'firebase';
+import {firebase_config} from './firebase_config.js';
+firebase.initializeApp(firebase_config);
+const database = firebase.database();
 class App extends Component {
 
   constructor (props) {
@@ -23,6 +26,7 @@ class App extends Component {
             votes: 0
           },
         ],
+        data: [],
         value: "",
         currentPage: "main",
         numQuestions: 3,
@@ -32,6 +36,32 @@ class App extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
       this.submittingButton = this.submittingButton.bind(this);
       this.usedVote = this.usedVote.bind(this);
+  }
+
+  pushToDB(path, data){
+    // Level 1 - read this if you are coming here from Levels/LevelONE.js
+    // 
+    // this is where want to create a simple function to push data to
+    // our Firebase project. To test the function, we use a dummy 
+    // button in this very component (prepared below)
+
+
+    // we can learn how to push to the database from here:
+    // https://firebase.google.com/docs/database/web/lists-of-data
+    let reference = database.ref(path);
+    var newPostRef= reference.push();
+    newPostRef.set(data);
+  }
+
+  componentDidMount() {
+    let reference = database.ref("data");
+    reference.on("child_added", (newData) =>{
+    
+      console.log(this.state.data);
+      this.setState({
+        data: this.state.data.concat( [ newData.val()] )
+      })
+    })
   }
 
   handleChange(event) {
@@ -48,6 +78,7 @@ class App extends Component {
     this.setState({
       questions: updateQuestions
     })
+    this.pushToDB("Question Directory",newQuestion);
   }
 
   submittingButton = () => this.addQuestion(this.state.value)
