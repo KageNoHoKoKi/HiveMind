@@ -4,6 +4,7 @@ import './App.css';
 import Login from "./Components/login";
 import Questionsqueue from "./Components/queue";
 import firebase from 'firebase';
+
 import {firebase_config} from './firebase_config.js';
 firebase.initializeApp(firebase_config);
 const database = firebase.database();
@@ -41,15 +42,6 @@ class App extends Component {
   }
 
   pushToDB(path, data){
-    // Level 1 - read this if you are coming here from Levels/LevelONE.js
-    // 
-    // this is where want to create a simple function to push data to
-    // our Firebase project. To test the function, we use a dummy 
-    // button in this very component (prepared below)
-
-
-    // we can learn how to push to the database from here:
-    // https://firebase.google.com/docs/database/web/lists-of-data
     let reference = database.ref(path);
     var newPostRef= reference.push();
     newPostRef.set(data);
@@ -133,7 +125,6 @@ class App extends Component {
         numQuestions: 0
       });
     }
-
     this.setState({
       value: ""
     })
@@ -192,7 +183,6 @@ class App extends Component {
     this.setState({currentPage:"login"});
   }
 
-
   usedVote = () => {
     let totalVotes = this.state.numVotes;
     if (totalVotes > 0) {
@@ -212,38 +202,51 @@ class App extends Component {
     if (this.state.currentPage === "login") {
       partial =
       <div className="App">
-        <h1>Hello!</h1>
-        <h2>Feel free to leave a question, or vote on a question.</h2>
-        <p>{this.state.numVotes}/3 votes left!</p>
-        <p>{this.state.numQuestions}/3 questions left!</p>
-
-
-        <form onSubmit={this.handleSubmit }>
-          <div className="container">
-            <textarea disabled={this.state.numQuestions==0} className="box" label="Ask a question!" value={this.state.value} onChange={this.handleChange} /> <br />
-            <br/>
-          </div>
-          <button disabled={!this.state.value} type="submit" name="action">Submit</button>
-        </form>
+        <div className="input-section">
+          <h4>Leave a question for the class, or vote on an existing question.</h4>
+          <form onSubmit={this.handleSubmit }>
+            <div className="container">
+              <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" disabled={this.state.numQuestions==0} placeholder="Type your question here..." value={this.state.value} onChange={this.handleChange} />
+            </div>
+            <button className="btn btn-outline-warning give-padding" disabled={!this.state.value} type="submit" name="action">Submit</button>
+          </form>
+          <small id="emailHelp" className="form-text text-muted">{this.state.numQuestions}/3 questions left  ·  {this.state.numVotes}/3 votes left</small>
+        </div>
 
        <div><Questionsqueue data={this.state.questions.sort(this.compareFunction).filter(this.filterFunction)} upvote={(i) => {this.bumpQuestion(i);this.usedVote();}} votes={this.state.numVotes} questions={this.state.questions}/></div>
      </div>
    } else if (this.state.currentPage === "main"){
      partial =
-     <div>
-      <h1>{"Hello, please login to your student or professor account below using your NetID."}</h1>
+     <div className="login_div">
+      <h3>{"Welcome to HiveMind."}</h3>
+      <h6>{"Please login to your student or professor account."}</h6>
+      <br></br>
+
       <form>
-        <input type="text" />
-        <br></br>
-        <input className="next_button" type="submit" value="Login" onClick={this.swapPage}/>
+        <div className="form-group">
+          <label for="exampleInputEmail1">Username</label>
+          <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="NetID"></input>
+        </div>
+        <div className="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password"></input>
+          <small id="emailHelp" className="form-text text-muted">Never share your password with anyone else.</small>
+        </div>
+        <button type="submit" className="btn btn-outline-warning give-padding" onClick={this.swapPage}>Login</button>
       </form>
+
     </div>
 
    }
-
     return (
       <div>
-        <h1>HiveMind</h1>
+        <nav className="navbar navbar-light bg-light">
+          <a className="navbar-brand" href="#">
+          <img src={logo} width="30" height="30" className="d-inline-block align-top" alt=""></img>
+          HiveMind
+          </a>
+          <span className="navbar-text">For classroom success ©</span>
+        </nav>
         <div>{partial}</div>
       </div>
    );

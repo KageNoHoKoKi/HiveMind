@@ -5,14 +5,11 @@ class Login extends Component {
     this.state = {
       currentPage:"login"
     };
-
   }
-
   render () {
     return (
       <div>
         <input className="text_field" type="text" value={this.state.value} onChange={this.state.change}></input>
-        <br></br>
         <input type="button" value="Submit" onClick={this.props.add}></input>
       </div>
     );
