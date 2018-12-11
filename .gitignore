@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 _*
-firebase_config.js
+# firebase_config.js
 # dependencies
 /node_modules
 /.pnp
