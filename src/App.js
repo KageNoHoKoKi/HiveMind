@@ -4,8 +4,9 @@ import './App.css';
 import Login from "./Components/login";
 import Questionsqueue from "./Components/queue";
 import firebase from 'firebase';
-console.log("test")
+
 import {firebase_config} from './firebase_config.js';
+debugger
 firebase.initializeApp(firebase_config);
 const database = firebase.database();
 class App extends Component {
