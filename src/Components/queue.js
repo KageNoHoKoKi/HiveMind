@@ -7,7 +7,7 @@ class Questionsqueue extends Component {
         let element = <li key={questionsData.key}>
           <p>{questionsData.text}</p>
           <p>VOTES:  {questionsData.votes}</p>
-          <button disabled={this.props.votes==0 } onClick={ ()=>{this.props.upvote(questionsData.key);} }>Up</button>
+          <button disabled={this.props.votes===0 } onClick={ ()=>{this.props.upvote(questionsData.key);} }>Up</button>
         </li>;
         return element;
       });

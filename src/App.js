@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
-import Login from "./Components/login";
 import Questionsqueue from "./Components/queue";
 import firebase from 'firebase';
 
