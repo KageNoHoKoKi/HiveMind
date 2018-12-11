@@ -164,7 +164,10 @@ class App extends Component {
   }
 
   filterFunction = (questionDataPoint) => {
-    if (this.state.value == "") {
+    console.log(questionDataPoint);
+    console.log(questionDataPoint.text.toLowerCase());
+    // return true;
+    if (this.state.value == "" ) {
       return true
 
     } else {
