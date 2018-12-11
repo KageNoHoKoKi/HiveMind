@@ -6,7 +6,7 @@ import Questionsqueue from "./Components/queue";
 import firebase from 'firebase';
 
 import {firebase_config} from './firebase_config.js';
-irebase.initializeApp(firebase_config);
+firebase.initializeApp(firebase_config);
 
 const database = firebase.database();
 class App extends Component {
