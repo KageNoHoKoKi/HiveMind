@@ -8,11 +8,15 @@ class Login extends Component {
   }
   render () {
     return (
-      <div>
+      <div style={styles.centering}>
         <input className="text_field" type="text" value={this.state.value} onChange={this.state.change}></input>
         <input type="button" value="Submit" onClick={this.props.add}></input>
       </div>
     );
   }
+}
+
+const styles = {
+  centering: {margin:"auto"}
 }
 export default Login;

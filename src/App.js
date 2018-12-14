@@ -3,10 +3,25 @@ import logo from './logo.png';
 import './App.css';
 import Questionsqueue from "./Components/queue";
 import firebase from 'firebase';
-
+import Grid from '@material-ui/core/Grid'
 import {firebase_config} from './firebase_config.js';
+import Button from '@material-ui/core/Button'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 firebase.initializeApp(firebase_config);
 
+
+const styles = {
+  centering: {margin:"auto", width:375, paddingRight:50},
+  button: {justify: "center"},
+  buttonSubmit: {margin:10}
+}
+const theme = createMuiTheme({
+  palette: {
+    
+    primary: { main: '#ffc107' }, // This is just green.A700 as hex.
+  },
+  typography: { useNextVariants: true },
+});
 const database = firebase.database();
 class App extends Component {
 
@@ -201,26 +216,31 @@ class App extends Component {
   }
 
   render() {
+
     var partial;
     if (this.state.currentPage === "login") {
       partial =
-      <div className="App">
+      <MuiThemeProvider theme={theme}>
+        
+      <div className="App" > 
         <div className="input-section">
           <h4>Leave a question for the class, or vote on an existing question.</h4>
           <form onSubmit={this.handleSubmit }>
             <div className="container">
-              <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" disabled={this.state.numQuestions==0} placeholder="Type your question here..." value={this.state.value} onChange={this.handleChange} />
+              <textarea style={styles.buttonSubmit} className="form-control" id="exampleFormControlTextarea1" rows="3" disabled={this.state.numQuestions==0} placeholder="Type your question here..." value={this.state.value} onChange={this.handleChange} />
             </div>
-            <button className="btn btn-outline-warning give-padding" disabled={!this.state.value} type="submit" name="action">Submit</button>
+            <Button  variant= "contained" color="primary" disabled={!this.state.value} type="submit" name="action">Submit</Button>
           </form>
           <small id="emailHelp" className="form-text text-muted">{this.state.numQuestions}/3 questions left  ·  {this.state.numVotes}/3 votes left</small>
         </div>
 
        <div><Questionsqueue data={this.state.questions.sort(this.compareFunction).filter(this.filterFunction)} upvote={(i) => {this.bumpQuestion(i);this.usedVote();}} votes={this.state.numVotes} questions={this.state.questions}/></div>
      </div>
+     </MuiThemeProvider>
    } else if (this.state.currentPage === "main"){
      partial =
-     <div className="login_div">
+     <Grid >
+     <div className="login_div" style={styles.centering}>
       <h3>{"Welcome to HiveMind."}</h3>
       <h6>{"Please login to your student or professor account."}</h6>
       <br></br>
@@ -235,13 +255,29 @@ class App extends Component {
           <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password"></input>
           <small id="emailHelp" className="form-text text-muted">Never share your password with anyone else.</small>
         </div>
+        <Grid container justify='center'>
         <button type="submit" className="btn btn-outline-warning give-padding" onClick={this.swapPage}>Login</button>
+        </Grid>
       </form>
 
     </div>
+    </Grid>
 
    }
     return (
+      <React.Fragment>
+        <svg xmlns="http://www.w3.org/1999/xlink"	width="100%" height="90">
+	 <defs>
+	<pattern id="hexagons" width="50" height="43.4" patternUnits="userSpaceOnUse" patternTransform="scale(5) translate(2) rotate(45)">
+	<polygon points="24.8,22 37.3,29.2 37.3,43.7 24.8,50.9 12.3,43.7 12.3,29.2" id="hex" />
+	<use href="#hex" x="25" />
+	<use href="#hex" x="-25" />
+	<use href="#hex" x="12.5" y="-21.7" />
+	<use href="#hex" x="-12.5" y="-21.7" />
+  </pattern>
+	 </defs>
+  <rect width="100%" height="100%" fill="url(#hexagons)" />
+  </svg>
       <div>
         <nav className="navbar navbar-light bg-light">
           <a className="navbar-brand" href="#">
@@ -252,6 +288,7 @@ class App extends Component {
         </nav>
         <div>{partial}</div>
       </div>
+    </React.Fragment>
    );
  }
 }

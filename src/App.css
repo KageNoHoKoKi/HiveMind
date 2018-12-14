@@ -1,6 +1,9 @@
 .App {
   text-align: center;
+  background-color: rgb(255, 233, 168)
+
 }
+
 
 .App-logo {
   /* animation: App-logo-spin infinite 20s linear; */
@@ -21,7 +24,9 @@
 .App-link {
   color: #61dafb;
 }
-
+.ul li:nth-child(odd) {
+  background-color: black;
+}
 .title {
   background-color: #fdcb6e;
   width: 100%;
@@ -42,6 +47,7 @@
   background-color: #dfe6e9;
   padding: 15px;
   margin-bottom: 20px;
+  /* margin-left:35px; */
 }
 .give-padding {
   margin-top: 12px;
@@ -49,6 +55,7 @@
 }
 ul {
 list-style-type: none;
+  margin-right: 40px
 }
 h2 {
   padding-left: 30px;
@@ -61,6 +68,17 @@ h4 {
   padding-top:40px;
 }
 
+
+svg { 
+  background: rgb(255, 193, 7); 
+  min-height: 5vh;
+  
+}
+polygon { 
+  fill: rgb(255, 193, 7); 
+  stroke-width: 2;
+  stroke: rgb(255, 233, 168);
+}
 /* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
