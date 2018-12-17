@@ -1,3 +1,6 @@
+HiveMind's Purpose
+This project was designed to solve one problem our group found within university learning environment. We wanted create an app that allowed students to anonymously submit questions that could be voted on by their peers. If the votes on the question reach a certain threshold it would be sent to the teacher to answer in front of the class. This app allows for students to not fall behind in lectures because they don't understand a concept, while it gives teachers valuable feedback to what material might cause a challenge to students that may need a different approach in teaching.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
